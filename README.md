@@ -30,5 +30,3 @@ module "s3" {
   bucket  = "my-super-unique-bucket-name"
 }
 ```
-
-## Custom encryption
