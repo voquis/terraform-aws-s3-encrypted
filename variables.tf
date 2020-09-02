@@ -36,12 +36,6 @@ variable "ignore_public_acls" {
   default     = true
 }
 
-variable "region" {
-  description = "AWS region in which to create bucket, e.g. eu-west-2"
-  type        = string
-  default     = null
-}
-
 variable "restrict_public_buckets" {
   description = "Whether or not to restrict public buckets"
   type        = bool

@@ -7,26 +7,26 @@ Generates a random name if omitted.
 ## Minimal with random name
 ```terraform
 provider "aws" {
-  version = "2.65.0"
+  version = "3.4.0"
   region  = "eu-west-2"
 }
 
 module "s3" {
   source  = "voquis/s3-encrypted/aws"
-  version = "0.0.1"
+  version = "0.0.2"
 }
 ```
 
 ## Custom name
 ```terraform
 provider "aws" {
-  version = "2.65.0"
+  version = "3.4.0"
   region  = "eu-west-2"
 }
 
 module "s3" {
   source  = "voquis/s3-encrypted/aws"
-  version = "0.0.1"
+  version = "0.0.2"
   bucket  = "my-super-unique-bucket-name"
 }
 ```

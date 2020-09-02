@@ -8,7 +8,6 @@ terraform {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_s3_bucket" "this" {
-  region = var.region
   bucket = var.bucket
   versioning {
     enabled = var.versioning_enabled
