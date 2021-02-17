@@ -53,8 +53,8 @@ variable "s3_acl" {
   type        = string
   default     = "private"
 }
-variable "existing_kms_key_id" {
-  description = "provide a existing kms key id"
+variable "kms_key_id" {
+  description = "Existing kms key id"
   type        = string
   default     = null
 }
