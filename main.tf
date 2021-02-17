@@ -9,14 +9,19 @@ terraform {
 
 resource "aws_s3_bucket" "this" {
   bucket = var.bucket
+  acl    = var.s3_acl
+
   versioning {
     enabled = var.versioning_enabled
   }
+
   force_destroy = var.force_destroy
+
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm = var.sse_algorithm
+        sse_algorithm     = var.sse_algorithm
+        kms_master_key_id = var.kms_key_id
       }
     }
   }
@@ -35,4 +40,15 @@ resource "aws_s3_bucket_public_access_block" "this" {
   block_public_policy     = var.block_public_policy
   ignore_public_acls      = var.ignore_public_acls
   restrict_public_buckets = var.restrict_public_buckets
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Create KMS key
+# Provider Docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key#example-usage
+# KMS keys and S3 usage: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#enable-default-server-side-encryption
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_kms_key" "this" {
+  description             = var.kms_description
+  deletion_window_in_days = var.kms_key_deletion_window
 }
