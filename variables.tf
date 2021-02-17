@@ -48,24 +48,12 @@ variable "versioning_enabled" {
   default     = true
 }
 
-variable "kms_description" {
-  description = "Description for the KMS key that is used to encrypt bucket objects"
-  type        = string
-  default     = "This key is used to encrypt bucket objects"
-}
-
-variable "kms_key_deletion_window" {
-  description = "Duration in days after which the key is deleted after destruction of the resource"
-  type        = number
-  default     = 10
-}
-
 variable "s3_acl" {
   description = "Access policy options for the s3 bucket"
   type        = string
   default     = "private"
 }
-variable "kms_key_id" {
+variable "existing_kms_key_id" {
   description = "provide a existing kms key id"
   type        = string
   default     = null
