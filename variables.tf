@@ -42,12 +42,6 @@ variable "restrict_public_buckets" {
   default     = true
 }
 
-variable "sse_algorithm" {
-  description = "Server-side encryption (SSE) algorithm to use"
-  type        = string
-  default     = "aws:kms"
-}
-
 variable "versioning_enabled" {
   description = "Whether to enable bucket versioning so that deletions and versions are retained"
   type        = bool
