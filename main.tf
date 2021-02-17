@@ -41,14 +41,3 @@ resource "aws_s3_bucket_public_access_block" "this" {
   ignore_public_acls      = var.ignore_public_acls
   restrict_public_buckets = var.restrict_public_buckets
 }
-
-# ---------------------------------------------------------------------------------------------------------------------
-# Create KMS key
-# Provider Docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key#example-usage
-# KMS keys and S3 usage: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#enable-default-server-side-encryption
-# ---------------------------------------------------------------------------------------------------------------------
-
-resource "aws_kms_key" "this" {
-  description             = var.kms_description
-  deletion_window_in_days = var.kms_key_deletion_window
-}

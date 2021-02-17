@@ -74,5 +74,5 @@ variable "s3_acl" {
 variable "kms_key_id" {
   description = "provide a existing kms key id"
   type        = string
-  default     = aws_kms_key.this.arn
+  default     = null
 }
