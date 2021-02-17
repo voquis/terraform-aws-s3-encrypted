@@ -9,14 +9,19 @@ terraform {
 
 resource "aws_s3_bucket" "this" {
   bucket = var.bucket
+  acl    = var.s3_acl
+
   versioning {
     enabled = var.versioning_enabled
   }
+
   force_destroy = var.force_destroy
+
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm = var.sse_algorithm
+        sse_algorithm     = var.kms_key_id == null ? "AES256" : "aws:kms"
+        kms_master_key_id = var.kms_key_id
       }
     }
   }

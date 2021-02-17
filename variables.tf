@@ -42,15 +42,19 @@ variable "restrict_public_buckets" {
   default     = true
 }
 
-variable "sse_algorithm" {
-  description = "Server-side encryption (SSE) algorithm to use"
-  type        = string
-  default     = "AES256"
-}
-
 variable "versioning_enabled" {
   description = "Whether to enable bucket versioning so that deletions and versions are retained"
   type        = bool
   default     = true
 }
 
+variable "s3_acl" {
+  description = "Access policy options for the s3 bucket"
+  type        = string
+  default     = "private"
+}
+variable "kms_key_id" {
+  description = "Existing kms key id"
+  type        = string
+  default     = null
+}
