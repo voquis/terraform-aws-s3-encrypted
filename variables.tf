@@ -54,6 +54,12 @@ variable "acl" {
   default     = "private"
 }
 
+variable "tags" {
+  description = "Map of key value pairs for tags"
+  type        = map(string)
+  default     = null
+}
+
 variable "kms_key_id" {
   description = "Existing kms key id"
   type        = string
