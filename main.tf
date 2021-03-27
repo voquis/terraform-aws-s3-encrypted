@@ -9,7 +9,8 @@ terraform {
 
 resource "aws_s3_bucket" "this" {
   bucket = var.bucket
-  acl    = var.s3_acl
+  acl    = var.acl
+  tags   = var.tags
 
   versioning {
     enabled = var.versioning_enabled
