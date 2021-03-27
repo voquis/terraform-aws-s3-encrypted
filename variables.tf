@@ -48,13 +48,20 @@ variable "versioning_enabled" {
   default     = true
 }
 
-variable "s3_acl" {
+variable "acl" {
   description = "Access policy options for the s3 bucket"
   type        = string
   default     = "private"
 }
+
 variable "kms_key_id" {
   description = "Existing kms key id"
   type        = string
+  default     = null
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Map of key value pair for tags"
   default     = null
 }
