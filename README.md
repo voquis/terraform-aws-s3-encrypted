@@ -2,6 +2,7 @@ S3 Encrypted bucket
 ===
 Terraform module to create a server-side encrypted S3 bucket defaulting to public access block: ON.
 Generates a random name if omitted.
+Optionally allows specifying a KMS key, otherwise uses the default AWS key.
 
 # Examples
 ## Minimal with random name
@@ -13,7 +14,7 @@ provider "aws" {
 
 module "s3" {
   source  = "voquis/s3-encrypted/aws"
-  version = "0.0.2"
+  version = "0.0.4"
 }
 ```
 
@@ -26,7 +27,7 @@ provider "aws" {
 
 module "s3" {
   source  = "voquis/s3-encrypted/aws"
-  version = "0.0.2"
+  version = "0.0.4"
   bucket  = "my-super-unique-bucket-name"
 }
 ```
