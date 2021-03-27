@@ -65,9 +65,3 @@ variable "kms_key_id" {
   type        = string
   default     = null
 }
-
-variable "tags" {
-  type        = map(string)
-  description = "Map of key value pair for tags"
-  default     = null
-}
