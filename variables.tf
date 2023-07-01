@@ -83,3 +83,9 @@ variable "kms_key_id" {
   type        = string
   default     = null
 }
+
+variable "bucket_key_enabled" {
+  description = "Whether to use short-lived bucket keys to save on KMS costs"
+  type        = bool
+  default     = true
+}
