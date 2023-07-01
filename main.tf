@@ -12,10 +12,6 @@ resource "aws_s3_bucket" "this" {
   acl    = var.acl
   tags   = var.tags
 
-  versioning {
-    enabled = var.versioning_enabled
-  }
-
   force_destroy = var.force_destroy
 
   server_side_encryption_configuration {
@@ -41,4 +37,25 @@ resource "aws_s3_bucket_public_access_block" "this" {
   block_public_policy     = var.block_public_policy
   ignore_public_acls      = var.ignore_public_acls
   restrict_public_buckets = var.restrict_public_buckets
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Create a versioning configuration resource on S3 Bucket.
+#
+# For MFA delete details, see:
+# https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html
+#
+# Provider Doc: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning
+# ---------------------------------------------------------------------------------------------------------------------
+resource "aws_s3_bucket_versioning" "this" {
+  count = var.versioning_enabled ? 1 : 0
+
+  bucket                = aws_s3_bucket.this.id
+  expected_bucket_owner = var.versioning_expected_bucket_owner
+  mfa                   = var.versioning_mfa
+
+  versioning_configuration {
+    status     = "Enabled"
+    mfa_delete = var.versioning_mfa_delete
+  }
 }
