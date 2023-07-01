@@ -48,10 +48,34 @@ variable "versioning_enabled" {
   default     = true
 }
 
+variable "versioning_mfa_delete" {
+  description = "Whether to require MFA when permanently deleting an object or changing versioning state"
+  type        = string
+  default     = "Disabled"
+}
+
+variable "versioning_mfa" {
+  description = "MFA device if MFA delete is enabled"
+  type        = string
+  default     = null
+}
+
+variable "versioning_expected_bucket_owner" {
+  description = "Account ID of the expected bucket owner"
+  type        = string
+  default     = null
+}
+
 variable "acl" {
-  description = "Access policy options for the s3 bucket"
+  description = "Canned access control policy options for the s3 bucket"
   type        = string
   default     = "private"
+}
+
+variable "object_ownership" {
+  description = "Object ownership"
+  type        = string
+  default     = "BucketOwnerPreferred"
 }
 
 variable "tags" {
@@ -64,4 +88,10 @@ variable "kms_key_id" {
   description = "Existing kms key id"
   type        = string
   default     = null
+}
+
+variable "bucket_key_enabled" {
+  description = "Whether to use short-lived bucket keys to save on KMS costs"
+  type        = bool
+  default     = true
 }

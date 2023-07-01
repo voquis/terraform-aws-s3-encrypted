@@ -9,23 +9,9 @@ terraform {
 
 resource "aws_s3_bucket" "this" {
   bucket = var.bucket
-  acl    = var.acl
   tags   = var.tags
 
-  versioning {
-    enabled = var.versioning_enabled
-  }
-
   force_destroy = var.force_destroy
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm     = var.kms_key_id == null ? "AES256" : "aws:kms"
-        kms_master_key_id = var.kms_key_id
-      }
-    }
-  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -41,4 +27,74 @@ resource "aws_s3_bucket_public_access_block" "this" {
   block_public_policy     = var.block_public_policy
   ignore_public_acls      = var.ignore_public_acls
   restrict_public_buckets = var.restrict_public_buckets
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Create a versioning configuration resource on S3 Bucket.
+#
+# For MFA delete details, see:
+# https://docs.aws.amazon.com/AmazonS3/latest/userguide/MultiFactorAuthenticationDelete.html
+#
+# Provider Doc: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning
+# ---------------------------------------------------------------------------------------------------------------------
+resource "aws_s3_bucket_versioning" "this" {
+  count = var.versioning_enabled ? 1 : 0
+
+  bucket                = aws_s3_bucket.this.id
+  expected_bucket_owner = var.versioning_expected_bucket_owner
+  mfa                   = var.versioning_mfa
+
+  versioning_configuration {
+    status     = "Enabled"
+    mfa_delete = var.versioning_mfa_delete
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Create a server side encryption resource on S3 Bucket.
+#
+# For S3 Bucket keys to save KMS costs, see:
+# https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html
+#
+# Provider Doc: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration
+# ---------------------------------------------------------------------------------------------------------------------
+resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+  bucket                = aws_s3_bucket.this.id
+  expected_bucket_owner = var.versioning_expected_bucket_owner
+
+  rule {
+    bucket_key_enabled = var.bucket_key_enabled
+
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = var.kms_key_id == null ? "AES256" : "aws:kms"
+      kms_master_key_id = var.kms_key_id
+    }
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Create an access control list (ACL) resource on S3 Bucket.
+#
+# Provider Doc: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl
+# ---------------------------------------------------------------------------------------------------------------------
+resource "aws_s3_bucket_acl" "this" {
+  bucket                = aws_s3_bucket.this.id
+  expected_bucket_owner = var.versioning_expected_bucket_owner
+  acl                   = var.acl
+
+  depends_on = [
+    aws_s3_bucket_ownership_controls.this
+  ]
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Create an ownership control resource on S3 Bucket, needed for setting ACL resource.
+#
+# Provider Doc: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls
+# ---------------------------------------------------------------------------------------------------------------------
+resource "aws_s3_bucket_ownership_controls" "this" {
+  bucket = aws_s3_bucket.this.id
+  rule {
+    object_ownership = var.object_ownership
+  }
 }
