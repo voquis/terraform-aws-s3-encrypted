@@ -9,7 +9,6 @@ terraform {
 
 resource "aws_s3_bucket" "this" {
   bucket = var.bucket
-  acl    = var.acl
   tags   = var.tags
 
   force_destroy = var.force_destroy
@@ -70,5 +69,32 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
       sse_algorithm     = var.kms_key_id == null ? "AES256" : "aws:kms"
       kms_master_key_id = var.kms_key_id
     }
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Create an access control list (ACL) resource on S3 Bucket.
+#
+# Provider Doc: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl
+# ---------------------------------------------------------------------------------------------------------------------
+resource "aws_s3_bucket_acl" "this" {
+  bucket                = aws_s3_bucket.this.id
+  expected_bucket_owner = var.versioning_expected_bucket_owner
+  acl                   = var.acl
+
+  depends_on = [
+    aws_s3_bucket_ownership_controls.this
+  ]
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Create an ownership control resource on S3 Bucket, needed for setting ACL resource.
+#
+# Provider Doc: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_ownership_controls
+# ---------------------------------------------------------------------------------------------------------------------
+resource "aws_s3_bucket_ownership_controls" "this" {
+  bucket = aws_s3_bucket.this.id
+  rule {
+    object_ownership = var.object_ownership
   }
 }

@@ -67,9 +67,15 @@ variable "versioning_expected_bucket_owner" {
 }
 
 variable "acl" {
-  description = "Access policy options for the s3 bucket"
+  description = "Canned access control policy options for the s3 bucket"
   type        = string
   default     = "private"
+}
+
+variable "object_ownership" {
+  description = "Object ownership"
+  type        = string
+  default     = "BucketOwnerPreferred"
 }
 
 variable "tags" {
